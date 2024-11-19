@@ -14,7 +14,7 @@ def predict_malaria(input_data):
     prediction = model.predict([input_data])[0]  # Predict the class (0 or 1)
     return label_mapping[prediction]
 
-# Function to generate and download the PDF
+# Function to generate and save the PDF
 def generate_pdf(result, symptoms, bp, temperature):
     pdf = FPDF()
     pdf.add_page()
@@ -101,10 +101,15 @@ if st.button("Predict"):
         st.write("Blood Pressure: Invalid or not provided.")
     st.write(f"Temperature: {temperature:.1f}°C")
     
-    # Generate and offer PDF download
+    # Generate PDF
     pdf_file = generate_pdf(result, symptoms, bp_valid, temperature)
     
+    # Provide Download Option
     with open(pdf_file, "rb") as pdf:
         b64_pdf = base64.b64encode(pdf.read()).decode('utf-8')
         href = f'<a href="data:application/octet-stream;base64,{b64_pdf}" download="{pdf_file}">Download Medical Report as PDF</a>'
         st.markdown(href, unsafe_allow_html=True)
+    
+    # Provide Print Option
+    href_print = f'<a href="{pdf_file}" target="_blank" onclick="window.print()">Print Medical Report</a>'
+    st.markdown(href_print, unsafe_allow_html=True)
