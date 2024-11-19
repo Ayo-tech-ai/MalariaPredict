@@ -14,29 +14,43 @@ def predict_malaria(input_data):
     prediction = model.predict([input_data])[0]  # Predict the class (0 or 1)
     return label_mapping[prediction]
 
-# Function to generate PDF
-def generate_pdf(result, bp, temperature):
+# Function to generate and download the PDF
+def generate_pdf(result, symptoms, bp, temperature):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
-
-    # Title
     pdf.cell(200, 10, txt="Medical Report", ln=True, align='C')
-    pdf.ln(10)  # Line break
-
-    # Content
-    pdf.cell(200, 10, txt=f"Prediction: {result}", ln=True)
-    pdf.cell(200, 10, txt=f"Blood Pressure: {bp if bp else 'Not provided'}", ln=True)
-    pdf.cell(200, 10, txt=f"Temperature: {temperature:.1f}°C", ln=True)
     pdf.ln(10)
-
-    pdf.cell(200, 10, txt="Symptoms Provided:", ln=True)
-    pdf.cell(200, 10, txt=", ".join([f"Symptom {i + 1}: {'Yes' if v else 'No'}" for i, v in enumerate(input_data)]), ln=True)
-
-    # Save PDF to a virtual file
-    pdf_output = f"{result}_report.pdf"
-    pdf.output(pdf_output)
-    return pdf_output
+    
+    # Add prediction result
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(200, 10, txt="Prediction Result:", ln=True)
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt=f"Likelihood of Malaria: {result}", ln=True)
+    pdf.ln(10)
+    
+    # Add symptoms section
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(200, 10, txt="Symptoms:", ln=True)
+    pdf.set_font("Arial", size=12)
+    for symptom, presence in symptoms.items():
+        pdf.cell(200, 10, txt=f"{symptom}: {'Yes' if presence else 'No'}", ln=True)
+    pdf.ln(10)
+    
+    # Add additional medical information
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(200, 10, txt="Additional Medical Information:", ln=True)
+    pdf.set_font("Arial", size=12)
+    if bp:
+        pdf.cell(200, 10, txt=f"Blood Pressure: {bp}", ln=True)
+    else:
+        pdf.cell(200, 10, txt="Blood Pressure: Invalid or not provided.", ln=True)
+    pdf.cell(200, 10, txt=f"Temperature: {temperature:.1f}°C", ln=True)
+    
+    # Save PDF to a file
+    pdf_file = "medical_report.pdf"
+    pdf.output(pdf_file)
+    return pdf_file
 
 # Streamlit App
 st.title("Malaria Prediction App")
@@ -44,26 +58,19 @@ st.write("This app predicts the likelihood of malaria based on symptoms. Additio
 
 # Dropdowns for symptoms
 st.subheader("Symptoms")
-fever = st.selectbox("Fever", options=["Yes", "No"])
-cold = st.selectbox("Cold", options=["Yes", "No"])
-rigor = st.selectbox("Rigor", options=["Yes", "No"])
-fatigue = st.selectbox("Fatigue", options=["Yes", "No"])
-headache = st.selectbox("Headache", options=["Yes", "No"])
-bitter_tongue = st.selectbox("Bitter Tongue", options=["Yes", "No"])
-vomiting = st.selectbox("Vomiting", options=["Yes", "No"])
-diarrhea = st.selectbox("Diarrhea", options=["Yes", "No"])
+symptoms = {
+    "Fever": st.selectbox("Fever", options=["Yes", "No"]),
+    "Cold": st.selectbox("Cold", options=["Yes", "No"]),
+    "Rigor": st.selectbox("Rigor", options=["Yes", "No"]),
+    "Fatigue": st.selectbox("Fatigue", options=["Yes", "No"]),
+    "Headache": st.selectbox("Headache", options=["Yes", "No"]),
+    "Bitter Tongue": st.selectbox("Bitter Tongue", options=["Yes", "No"]),
+    "Vomiting": st.selectbox("Vomiting", options=["Yes", "No"]),
+    "Diarrhea": st.selectbox("Diarrhea", options=["Yes", "No"]),
+}
 
-# Map "Yes" and "No" to 1 and 0
-input_data = [
-    1 if fever == "Yes" else 0,
-    1 if cold == "Yes" else 0,
-    1 if rigor == "Yes" else 0,
-    1 if fatigue == "Yes" else 0,
-    1 if headache == "Yes" else 0,
-    1 if bitter_tongue == "Yes" else 0,
-    1 if vomiting == "Yes" else 0,
-    1 if diarrhea == "Yes" else 0,
-]
+# Map "Yes" and "No" to 1 and 0 for model input
+input_data = [1 if value == "Yes" else 0 for value in symptoms.values()]
 
 # Section for additional inputs (not part of the model)
 st.subheader("Additional Medical Inputs")
@@ -75,8 +82,9 @@ if st.button("Predict"):
     # Validate BP input
     try:
         systolic, diastolic = map(int, bp.split("/"))
+        bp_valid = f"{systolic}/{diastolic} mmHg"
     except ValueError:
-        systolic = diastolic = None  # Set None if BP is invalid
+        bp_valid = None  # Set None if BP is invalid
 
     # Model prediction
     result = predict_malaria(input_data)
@@ -86,26 +94,16 @@ if st.button("Predict"):
     
     # Display additional medical information
     st.subheader("Additional Information:")
-    if systolic and diastolic:
-        st.write(f"Blood Pressure: {systolic}/{diastolic} mmHg")
+    if bp_valid:
+        st.write(f"Blood Pressure: {bp_valid}")
     else:
         st.write("Blood Pressure: Invalid or not provided.")
     st.write(f"Temperature: {temperature:.1f}°C")
-
-    # Generate PDF
-    pdf_file = generate_pdf(result, bp, temperature)
-
-    # Provide download link for PDF
+    
+    # Generate and offer PDF download
+    pdf_file = generate_pdf(result, symptoms, bp_valid, temperature)
+    
     with open(pdf_file, "rb") as pdf:
-        pdf_data = pdf.read()
-        b64_pdf = base64.b64encode(pdf_data).decode("utf-8")
+        b64_pdf = base64.b64encode(pdf.read()).decode('utf-8')
         href = f'<a href="data:application/octet-stream;base64,{b64_pdf}" download="{pdf_file}">Download Medical Report as PDF</a>'
         st.markdown(href, unsafe_allow_html=True)
-
-    # Print Button (using JavaScript)
-    st.markdown(
-        """
-        <button onclick="window.print()">Print Report</button>
-        """,
-        unsafe_allow_html=True,
-    )
