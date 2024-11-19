@@ -33,8 +33,9 @@ def generate_pdf(result, symptoms, bp, temperature):
     pdf.set_font("Arial", style='B', size=12)
     pdf.cell(200, 10, txt="Symptoms:", ln=True)
     pdf.set_font("Arial", size=12)
-    for symptom, presence in symptoms.items():
-        pdf.cell(200, 10, txt=f"{symptom}: {'Yes' if presence else 'No'}", ln=True)
+    for symptom_name, presence in symptoms.items():
+        presence_text = "Yes" if presence else "No"
+        pdf.cell(200, 10, txt=f"{symptom_name}: {presence_text}", ln=True)
     pdf.ln(10)
     
     # Add additional medical information
