@@ -1,5 +1,7 @@
 import streamlit as st
 import joblib
+from fpdf import FPDF
+import base64
 
 # Load your saved model
 model = joblib.load('Malpred.joblib')
@@ -11,6 +13,30 @@ label_mapping = {1: "Malaria", 0: "No Malaria"}
 def predict_malaria(input_data):
     prediction = model.predict([input_data])[0]  # Predict the class (0 or 1)
     return label_mapping[prediction]
+
+# Function to generate PDF
+def generate_pdf(result, bp, temperature):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    # Title
+    pdf.cell(200, 10, txt="Medical Report", ln=True, align='C')
+    pdf.ln(10)  # Line break
+
+    # Content
+    pdf.cell(200, 10, txt=f"Prediction: {result}", ln=True)
+    pdf.cell(200, 10, txt=f"Blood Pressure: {bp if bp else 'Not provided'}", ln=True)
+    pdf.cell(200, 10, txt=f"Temperature: {temperature:.1f}°C", ln=True)
+    pdf.ln(10)
+
+    pdf.cell(200, 10, txt="Symptoms Provided:", ln=True)
+    pdf.cell(200, 10, txt=", ".join([f"Symptom {i + 1}: {'Yes' if v else 'No'}" for i, v in enumerate(input_data)]), ln=True)
+
+    # Save PDF to a virtual file
+    pdf_output = f"{result}_report.pdf"
+    pdf.output(pdf_output)
+    return pdf_output
 
 # Streamlit App
 st.title("Malaria Prediction App")
@@ -65,3 +91,21 @@ if st.button("Predict"):
     else:
         st.write("Blood Pressure: Invalid or not provided.")
     st.write(f"Temperature: {temperature:.1f}°C")
+
+    # Generate PDF
+    pdf_file = generate_pdf(result, bp, temperature)
+
+    # Provide download link for PDF
+    with open(pdf_file, "rb") as pdf:
+        pdf_data = pdf.read()
+        b64_pdf = base64.b64encode(pdf_data).decode("utf-8")
+        href = f'<a href="data:application/octet-stream;base64,{b64_pdf}" download="{pdf_file}">Download Medical Report as PDF</a>'
+        st.markdown(href, unsafe_allow_html=True)
+
+    # Print Button (using JavaScript)
+    st.markdown(
+        """
+        <button onclick="window.print()">Print Report</button>
+        """,
+        unsafe_allow_html=True,
+    )
