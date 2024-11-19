@@ -7,7 +7,7 @@ import base64
 model = joblib.load('Malpred.joblib')
 
 # Label mapping
-label_mapping = {1: "Malaria", 0: "No Malaria"}
+label_mapping = {1: "High Possibility of Malaria", 0: "Low Possibility of Malaria"}
 
 # Define the prediction function
 def predict_malaria(input_data):
@@ -26,7 +26,7 @@ def generate_pdf(result, symptoms, bp, temperature):
     pdf.set_font("Arial", style='B', size=12)
     pdf.cell(200, 10, txt="Prediction Result:", ln=True)
     pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt=f"Likelihood of Malaria: {result}", ln=True)
+    pdf.cell(200, 10, txt=f"Likelihood of Illness: {result}", ln=True)
     pdf.ln(10)
     
     # Add symptoms section
