@@ -57,20 +57,45 @@ def generate_pdf(result, symptoms, bp, temperature):
 st.title("Malaria Prediction App")
 st.write("This app predicts the likelihood of malaria based on symptoms. Additionally, you can input vital signs for reference purposes.")
 
-# Dropdowns for symptoms
+# Add a background image
+st.markdown("""
+    <style>
+        body {
+            background-image: url('background1.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# Display symptoms in columns of 2-2
 st.subheader("Symptoms")
-symptoms = {
-    "Fever": st.selectbox("Fever", options=["Yes", "No"]),
-    "Cold": st.selectbox("Cold", options=["Yes", "No"]),
-    "Rigor": st.selectbox("Rigor", options=["Yes", "No"]),
-    "Fatigue": st.selectbox("Fatigue", options=["Yes", "No"]),
-    "Headache": st.selectbox("Headache", options=["Yes", "No"]),
-    "Bitter Tongue": st.selectbox("Bitter Tongue", options=["Yes", "No"]),
-    "Vomiting": st.selectbox("Vomiting", options=["Yes", "No"]),
-    "Diarrhea": st.selectbox("Diarrhea", options=["Yes", "No"]),
-}
+col1, col2 = st.columns(2)
+
+with col1:
+    fever = st.selectbox("Fever", options=["Yes", "No"])
+    cold = st.selectbox("Cold", options=["Yes", "No"])
+    fatigue = st.selectbox("Fatigue", options=["Yes", "No"])
+    vomiting = st.selectbox("Vomiting", options=["Yes", "No"])
+
+with col2:
+    rigor = st.selectbox("Rigor", options=["Yes", "No"])
+    headache = st.selectbox("Headache", options=["Yes", "No"])
+    bitter_tongue = st.selectbox("Bitter Tongue", options=["Yes", "No"])
+    diarrhea = st.selectbox("Diarrhea", options=["Yes", "No"])
 
 # Map "Yes" and "No" to 1 and 0 for model input
+symptoms = {
+    "Fever": fever,
+    "Cold": cold,
+    "Fatigue": fatigue,
+    "Vomiting": vomiting,
+    "Rigor": rigor,
+    "Headache": headache,
+    "Bitter Tongue": bitter_tongue,
+    "Diarrhea": diarrhea
+}
+
 input_data = [1 if value == "Yes" else 0 for value in symptoms.values()]
 
 # Section for additional inputs (not part of the model)
