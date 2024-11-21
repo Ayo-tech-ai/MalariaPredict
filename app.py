@@ -34,8 +34,8 @@ def generate_pdf(result, symptoms, bp, temperature):
     pdf.cell(200, 10, txt="Symptoms:", ln=True)
     pdf.set_font("Arial", size=12)
     for symptom_name, presence in symptoms.items():
-        # Directly use the "Yes" or "No" values
-        pdf.cell(200, 10, txt=f"{symptom_name}: {presence}", ln=True)
+        presence_text = "Yes" if presence else "No"
+        pdf.cell(200, 10, txt=f"{symptom_name}: {presence_text}", ln=True)
     pdf.ln(10)
     
     # Add additional medical information
@@ -78,6 +78,22 @@ st.subheader("Additional Medical Inputs")
 bp = st.text_input("Blood Pressure (e.g., 120/80)", help="Enter the patient's blood pressure in the format Systolic/Diastolic.")
 temperature = st.number_input("Temperature (in °C)", min_value=30.0, max_value=45.0, step=0.1, help="Enter the patient's temperature in degrees Celsius.")
 
+# Button for reviewing inputs
+if st.button("Review Inputs"):
+    # Displaying the symptoms chosen by the user
+    st.subheader("Your Inputted Symptoms:")
+    for symptom_name, presence in symptoms.items():
+        presence_text = "Yes" if presence == "Yes" else "No"
+        st.write(f"{symptom_name}: {presence_text}")
+    
+    # Displaying additional medical inputs
+    st.subheader("Additional Medical Information:")
+    if bp:
+        st.write(f"Blood Pressure: {bp}")
+    else:
+        st.write("Blood Pressure: Not provided.")
+    st.write(f"Temperature: {temperature:.1f}°C")
+
 # Prediction button
 if st.button("Predict"):
     # Validate BP input
@@ -92,19 +108,6 @@ if st.button("Predict"):
     
     # Display prediction
     st.success(f"The prediction result is: {result}")
-    
-    # Display additional medical information
-    st.subheader("Additional Information:")
-    if bp_valid:
-        st.write(f"Blood Pressure: {bp_valid}")
-    else:
-        st.write("Blood Pressure: Invalid or not provided.")
-    st.write(f"Temperature: {temperature:.1f}°C")
-    
-    # Debugging: Print symptom inputs to ensure they are correctly passed
-    st.write("Symptoms Input Values:")
-    for symptom_name, presence in symptoms.items():
-        st.write(f"{symptom_name}: {presence}")
     
     # Generate PDF
     pdf_file = generate_pdf(result, symptoms, bp_valid, temperature)
