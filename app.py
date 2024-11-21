@@ -101,6 +101,11 @@ if st.button("Predict"):
         st.write("Blood Pressure: Invalid or not provided.")
     st.write(f"Temperature: {temperature:.1f}°C")
     
+    # Debugging: Print symptom inputs to ensure they are correctly passed
+    st.write("Symptoms Input Values:")
+    for symptom_name, presence in symptoms.items():
+        st.write(f"{symptom_name}: {presence}")
+    
     # Generate PDF
     pdf_file = generate_pdf(result, symptoms, bp_valid, temperature)
     
