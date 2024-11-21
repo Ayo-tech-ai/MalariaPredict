@@ -34,8 +34,7 @@ def generate_pdf(result, symptoms, bp, temperature):
     pdf.cell(200, 10, txt="Symptoms:", ln=True)
     pdf.set_font("Arial", size=12)
     for symptom_name, presence in symptoms.items():
-        presence_text = "Yes" if presence else "No"
-        pdf.cell(200, 10, txt=f"{symptom_name}: {presence_text}", ln=True)
+        pdf.cell(200, 10, txt=f"{symptom_name}: {presence}", ln=True)  # Use presence directly (Yes/No)
     pdf.ln(10)
     
     # Add additional medical information
@@ -101,7 +100,7 @@ if st.button("Predict"):
         st.write("Blood Pressure: Invalid or not provided.")
     st.write(f"Temperature: {temperature:.1f}°C")
     
-    # Generate PDF
+    # Pass "Yes" and "No" strings directly for symptoms when generating the PDF
     pdf_file = generate_pdf(result, symptoms, bp_valid, temperature)
     
     # Provide Download Option
