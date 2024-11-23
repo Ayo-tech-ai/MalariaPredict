@@ -34,7 +34,6 @@ def generate_pdf(result, symptoms, bp, temperature):
     pdf.cell(200, 10, txt="Symptoms:", ln=True)
     pdf.set_font("Arial", size=12)
     for symptom_name, presence in symptoms.items():
-        # Directly use the "Yes" or "No" values
         pdf.cell(200, 10, txt=f"{symptom_name}: {presence}", ln=True)
     pdf.ln(10)
     
@@ -54,23 +53,43 @@ def generate_pdf(result, symptoms, bp, temperature):
     return pdf_file
 
 # Streamlit App
+st.markdown("""
+    <style>
+    body {
+        background-image: url('https://github.com/Ayo-tech-ai/MalariaPredict/raw/main/background1.jpeg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        color: white;
+    }
+    .stApp {
+        background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent overlay */
+        padding: 10px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 st.title("Malaria Prediction App")
 st.write("This app predicts the likelihood of malaria based on symptoms. Additionally, you can input vital signs for reference purposes.")
 
-# Dropdowns for symptoms in two columns
-st.subheader("Symptoms")
+# Dropdowns for symptoms (Display in columns)
 col1, col2 = st.columns(2)
 
-symptoms = {
-    "Fever": col1.selectbox("Fever", options=["Yes", "No"]),
-    "Cold": col2.selectbox("Cold", options=["Yes", "No"]),
-    "Rigor": col1.selectbox("Rigor", options=["Yes", "No"]),
-    "Fatigue": col2.selectbox("Fatigue", options=["Yes", "No"]),
-    "Headache": col1.selectbox("Headache", options=["Yes", "No"]),
-    "Bitter Tongue": col2.selectbox("Bitter Tongue", options=["Yes", "No"]),
-    "Vomiting": col1.selectbox("Vomiting", options=["Yes", "No"]),
-    "Diarrhea": col2.selectbox("Diarrhea", options=["Yes", "No"]),
-}
+with col1:
+    symptoms = {
+        "Fever": st.selectbox("Fever", options=["Yes", "No"]),
+        "Cold": st.selectbox("Cold", options=["Yes", "No"]),
+        "Rigor": st.selectbox("Rigor", options=["Yes", "No"]),
+        "Fatigue": st.selectbox("Fatigue", options=["Yes", "No"]),
+    }
+
+with col2:
+    symptoms.update({
+        "Headache": st.selectbox("Headache", options=["Yes", "No"]),
+        "Bitter Tongue": st.selectbox("Bitter Tongue", options=["Yes", "No"]),
+        "Vomiting": st.selectbox("Vomiting", options=["Yes", "No"]),
+        "Diarrhea": st.selectbox("Diarrhea", options=["Yes", "No"]),
+    })
 
 # Map "Yes" and "No" to 1 and 0 for model input
 input_data = [1 if value == "Yes" else 0 for value in symptoms.values()]
