@@ -57,17 +57,19 @@ def generate_pdf(result, symptoms, bp, temperature):
 st.title("Malaria Prediction App")
 st.write("This app predicts the likelihood of malaria based on symptoms. Additionally, you can input vital signs for reference purposes.")
 
-# Dropdowns for symptoms
+# Dropdowns for symptoms in two columns
 st.subheader("Symptoms")
+col1, col2 = st.columns(2)
+
 symptoms = {
-    "Fever": st.selectbox("Fever", options=["Yes", "No"]),
-    "Cold": st.selectbox("Cold", options=["Yes", "No"]),
-    "Rigor": st.selectbox("Rigor", options=["Yes", "No"]),
-    "Fatigue": st.selectbox("Fatigue", options=["Yes", "No"]),
-    "Headache": st.selectbox("Headache", options=["Yes", "No"]),
-    "Bitter Tongue": st.selectbox("Bitter Tongue", options=["Yes", "No"]),
-    "Vomiting": st.selectbox("Vomiting", options=["Yes", "No"]),
-    "Diarrhea": st.selectbox("Diarrhea", options=["Yes", "No"]),
+    "Fever": col1.selectbox("Fever", options=["Yes", "No"]),
+    "Cold": col2.selectbox("Cold", options=["Yes", "No"]),
+    "Rigor": col1.selectbox("Rigor", options=["Yes", "No"]),
+    "Fatigue": col2.selectbox("Fatigue", options=["Yes", "No"]),
+    "Headache": col1.selectbox("Headache", options=["Yes", "No"]),
+    "Bitter Tongue": col2.selectbox("Bitter Tongue", options=["Yes", "No"]),
+    "Vomiting": col1.selectbox("Vomiting", options=["Yes", "No"]),
+    "Diarrhea": col2.selectbox("Diarrhea", options=["Yes", "No"]),
 }
 
 # Map "Yes" and "No" to 1 and 0 for model input
