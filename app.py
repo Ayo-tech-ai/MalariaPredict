@@ -34,8 +34,8 @@ def generate_pdf(result, symptoms, bp, temperature):
     pdf.cell(200, 10, txt="Symptoms:", ln=True)
     pdf.set_font("Arial", size=12)
     for symptom_name, presence in symptoms.items():
-        presence_text = "Yes" if presence else "No"
-        pdf.cell(200, 10, txt=f"{symptom_name}: {presence_text}", ln=True)
+        # Directly use the "Yes" or "No" values
+        pdf.cell(200, 10, txt=f"{symptom_name}: {presence}", ln=True)
     pdf.ln(10)
     
     # Add additional medical information
@@ -57,67 +57,26 @@ def generate_pdf(result, symptoms, bp, temperature):
 st.title("Malaria Prediction App")
 st.write("This app predicts the likelihood of malaria based on symptoms. Additionally, you can input vital signs for reference purposes.")
 
-# Add a background image
-st.markdown("""
-    <style>
-        body {
-            background-image: url('background1.jpg');
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-# Display symptoms in columns of 2-2
+# Dropdowns for symptoms
 st.subheader("Symptoms")
-col1, col2 = st.columns(2)
-
-with col1:
-    fever = st.selectbox("Fever", options=["Yes", "No"])
-    cold = st.selectbox("Cold", options=["Yes", "No"])
-    fatigue = st.selectbox("Fatigue", options=["Yes", "No"])
-    vomiting = st.selectbox("Vomiting", options=["Yes", "No"])
-
-with col2:
-    rigor = st.selectbox("Rigor", options=["Yes", "No"])
-    headache = st.selectbox("Headache", options=["Yes", "No"])
-    bitter_tongue = st.selectbox("Bitter Tongue", options=["Yes", "No"])
-    diarrhea = st.selectbox("Diarrhea", options=["Yes", "No"])
-
-# Map "Yes" and "No" to 1 and 0 for model input
 symptoms = {
-    "Fever": fever,
-    "Cold": cold,
-    "Fatigue": fatigue,
-    "Vomiting": vomiting,
-    "Rigor": rigor,
-    "Headache": headache,
-    "Bitter Tongue": bitter_tongue,
-    "Diarrhea": diarrhea
+    "Fever": st.selectbox("Fever", options=["Yes", "No"]),
+    "Cold": st.selectbox("Cold", options=["Yes", "No"]),
+    "Rigor": st.selectbox("Rigor", options=["Yes", "No"]),
+    "Fatigue": st.selectbox("Fatigue", options=["Yes", "No"]),
+    "Headache": st.selectbox("Headache", options=["Yes", "No"]),
+    "Bitter Tongue": st.selectbox("Bitter Tongue", options=["Yes", "No"]),
+    "Vomiting": st.selectbox("Vomiting", options=["Yes", "No"]),
+    "Diarrhea": st.selectbox("Diarrhea", options=["Yes", "No"]),
 }
 
+# Map "Yes" and "No" to 1 and 0 for model input
 input_data = [1 if value == "Yes" else 0 for value in symptoms.values()]
 
 # Section for additional inputs (not part of the model)
 st.subheader("Additional Medical Inputs")
 bp = st.text_input("Blood Pressure (e.g., 120/80)", help="Enter the patient's blood pressure in the format Systolic/Diastolic.")
 temperature = st.number_input("Temperature (in °C)", min_value=30.0, max_value=45.0, step=0.1, help="Enter the patient's temperature in degrees Celsius.")
-
-# Button for reviewing inputs
-if st.button("Review Inputs"):
-    # Displaying the symptoms chosen by the user
-    st.subheader("Your Inputted Symptoms:")
-    for symptom_name, presence in symptoms.items():
-        presence_text = "Yes" if presence == "Yes" else "No"
-        st.write(f"{symptom_name}: {presence_text}")
-    
-    # Displaying additional medical inputs
-    st.subheader("Additional Medical Information:")
-    if bp:
-        st.write(f"Blood Pressure: {bp}")
-    else:
-        st.write("Blood Pressure: Not provided.")
-    st.write(f"Temperature: {temperature:.1f}°C")
 
 # Prediction button
 if st.button("Predict"):
@@ -133,6 +92,19 @@ if st.button("Predict"):
     
     # Display prediction
     st.success(f"The prediction result is: {result}")
+    
+    # Display additional medical information
+    st.subheader("Additional Information:")
+    if bp_valid:
+        st.write(f"Blood Pressure: {bp_valid}")
+    else:
+        st.write("Blood Pressure: Invalid or not provided.")
+    st.write(f"Temperature: {temperature:.1f}°C")
+    
+    # Debugging: Print symptom inputs to ensure they are correctly passed
+    st.write("Symptoms Input Values:")
+    for symptom_name, presence in symptoms.items():
+        st.write(f"{symptom_name}: {presence}")
     
     # Generate PDF
     pdf_file = generate_pdf(result, symptoms, bp_valid, temperature)
