@@ -66,9 +66,56 @@ st.markdown("""
         background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent overlay */
         padding: 10px;
     }
+    h1 {
+        color: blue;
+        text-align: center;
+        font-size: 40px;
+    }
+    .team-btn {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        background-color: #008CBA;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
     </style>
 """, unsafe_allow_html=True)
 
+# Add "Meet the Team" button
+if st.button("Meet the Team", key="team_button"):
+    st.markdown("""
+        <style>
+        .team-container {
+            font-family: Arial, sans-serif;
+            color: black;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        </style>
+        <div class="team-container">
+            <h2>Meet the Team</h2>
+            <p><strong>Gloria Oduose</strong><br>
+            Fellow ID: FE/23/47459182<br>
+            Email: gloriaejiro92@gmail.com<br>
+            Learning Track: Data Science<br>
+            Phone: 08139249635</p>
+            <hr>
+            <p><strong>Evuarhere Onomine</strong><br>
+            Fellow ID: FE/23/80742800<br>
+            Email: onomineevuarhere@gmail.com<br>
+            Learning Track: Cloud Computing<br>
+            Phone: 08067155766</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+# Main Page Heading
 st.title("AI-Doc Assistant")
 st.write("This AI-powered web App predicts the likelihood of a Patient having malaria based on symptoms.")
 
