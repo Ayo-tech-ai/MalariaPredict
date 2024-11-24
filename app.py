@@ -57,9 +57,9 @@ st.markdown("""
     <style>
     body {
         background-image: url('https://github.com/Ayo-tech-ai/MalariaPredict/raw/main/background1.jpeg');
-        background-size: cover;
+        background-size: cover;  /* Fills the screen but may crop */
         background-position: center;
-        background-repeat: no-repeat;
+        background-attachment: fixed;
         color: white;
     }
     .stApp {
