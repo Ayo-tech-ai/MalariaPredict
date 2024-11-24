@@ -69,8 +69,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.title("Malaria Prediction App")
-st.write("This app predicts the likelihood of malaria based on symptoms. Additionally, you can input vital signs for reference purposes.")
+st.title("AI-Doc Assistant")
+st.write("This AI-powered web App predicts the likelihood of a Patient having malaria based on symptoms.")
 
 # Dropdowns for symptoms (Display in columns)
 col1, col2 = st.columns(2)
