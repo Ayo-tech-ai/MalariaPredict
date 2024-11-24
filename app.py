@@ -112,6 +112,12 @@ if st.button("Meet the Team", key="team_button"):
             Email: onomineevuarhere@gmail.com<br>
             Learning Track: Cloud Computing<br>
             Phone: 08067155766</p>
+            <hr>
+            <p><strong>Ayoola Mujib Ayodele</strong><br>
+            Fellow ID: FE/23/89361170<br>
+            Email: ayodelemujibayoola@gmail.com<br>
+            Learning Track: AI/ML<br>
+            Phone: 08136626696</p>
         </div>
     """, unsafe_allow_html=True)
 
