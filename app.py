@@ -60,16 +60,16 @@ st.markdown("""
         background-size: cover;  /* Fills the screen but may crop */
         background-position: center;
         background-attachment: fixed;
-        color: green;
+        color: blue;
     }
     .stApp {
-        background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent overlay */
+        background-color: blue;  /* Changed to solid blue */
         padding: 10px;
     }
     h1 {
         color: blue;
         text-align: center;
-        font-size: 40px;
+        font-size: 50px;
     }
     .team-btn {
         position: absolute;
@@ -86,6 +86,7 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+
 
 # Add "Meet the Team" button
 if st.button("Meet the Team", key="team_button"):
