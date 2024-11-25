@@ -60,7 +60,7 @@ st.markdown("""
         background-size: cover;  /* Fills the screen but may crop */
         background-position: center;
         background-attachment: fixed;
-        color: white;
+        color: green;
     }
     .stApp {
         background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent overlay */
