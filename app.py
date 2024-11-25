@@ -75,7 +75,7 @@ st.markdown("""
         top: 10px;
         right: 20px;
         background-color: #008CBA;
-        color: white;
+        color: black;
         border: none;
         padding: 10px 20px;
         text-align: center;
@@ -84,7 +84,7 @@ st.markdown("""
         border-radius: 5px;
     }
     .symptom-text {
-        color: blue;
+        color: black;
     }
     .result-text {
         color: red;
