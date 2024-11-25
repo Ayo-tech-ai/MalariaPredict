@@ -1,3 +1,4 @@
+import streamlit as st
 import joblib
 from fpdf import FPDF
 import base64
