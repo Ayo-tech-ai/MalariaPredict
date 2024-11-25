@@ -64,7 +64,6 @@ st.markdown("""
     .stApp {
         background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent overlay */
         padding: 10px;
-        color: red !important; /* Change text color to red */
     }
     h1 {
         color: blue;
@@ -83,6 +82,13 @@ st.markdown("""
         font-size: 16px;
         cursor: pointer;
         border-radius: 5px;
+    }
+    .symptom-text {
+        color: white;
+    }
+    .result-text {
+        color: red;
+        font-weight: bold;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -163,32 +169,27 @@ if st.button("Predict"):
 
     # Model prediction
     result = predict_malaria(input_data)
-    
+
     # Display prediction
-    st.success(f"The prediction result is: {result}")
-    
+    st.markdown(f"<p class='result-text'>The prediction result is: {result}</p>", unsafe_allow_html=True)
+
     # Display additional medical information
     st.subheader("Additional Information:")
     if bp_valid:
-        st.write(f"Blood Pressure: {bp_valid}")
+        st.markdown(f"<p class='symptom-text'>Blood Pressure: {bp_valid}</p>", unsafe_allow_html=True)
     else:
-        st.write("Blood Pressure: Invalid or not provided.")
-    st.write(f"Temperature: {temperature:.1f}°C")
-    
-    # Debugging: Print symptom inputs to ensure they are correctly passed
-    st.write("Symptoms Input Values:")
-    for symptom_name, presence in symptoms.items():
-        st.write(f"{symptom_name}: {presence}")
-    
+        st.markdown("<p class='symptom-text'>Blood Pressure: Invalid or not provided.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p class='symptom-text'>Temperature: {temperature:.1f}°C</p>", unsafe_allow_html=True)
+
     # Generate PDF
     pdf_file = generate_pdf(result, symptoms, bp_valid, temperature)
-    
+
     # Provide Download Option
     with open(pdf_file, "rb") as pdf:
         b64_pdf = base64.b64encode(pdf.read()).decode('utf-8')
         href = f'<a href="data:application/octet-stream;base64,{b64_pdf}" download="{pdf_file}">Download Medical Report as PDF</a>'
         st.markdown(href, unsafe_allow_html=True)
-    
+
     # Provide Print Option
     href_print = f'<a href="{pdf_file}" target="_blank" onclick="window.print()">Print Medical Report</a>'
     st.markdown(href_print, unsafe_allow_html=True)
