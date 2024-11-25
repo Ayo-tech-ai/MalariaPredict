@@ -53,7 +53,7 @@ def generate_pdf(result, symptoms, bp, temperature):
     return pdf_file
 
 # Streamlit App
- st.markdown("""
+    st.markdown("""
     <style>
     body {
         background-image: url('https://github.com/Ayo-tech-ai/MalariaPredict/raw/main/background1.jpeg');
