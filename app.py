@@ -84,7 +84,7 @@ st.markdown("""
         border-radius: 5px;
     }
     .symptom-text {
-        color: white;
+        color: black;
     }
     .result-text {
         color: red;
