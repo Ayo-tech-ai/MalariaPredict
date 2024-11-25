@@ -57,23 +57,19 @@ st.markdown("""
     <style>
     body {
         background-image: url('https://github.com/Ayo-tech-ai/MalariaPredict/raw/main/background1.jpeg');
-        background-size: cover;
+        background-size: cover;  /* Fills the screen but may crop */
         background-position: center;
         background-attachment: fixed;
         color: white;
     }
     .stApp {
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent overlay */
         padding: 10px;
-        color: white; /* Ensure text remains white */
     }
     h1 {
-        color: blue; /* Keep heading blue */
+        color: blue;
         text-align: center;
         font-size: 40px;
-    }
-    h2, h3, h4, h5, h6, p, li, span, div, input, select, textarea, button {
-        color: white !important; /* Force consistent white text */
     }
     .team-btn {
         position: absolute;
@@ -90,6 +86,7 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+
 # Add "Meet the Team" button
 if st.button("Meet the Team", key="team_button"):
     st.markdown("""
