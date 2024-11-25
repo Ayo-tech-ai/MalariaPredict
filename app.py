@@ -53,14 +53,13 @@ def generate_pdf(result, symptoms, bp, temperature):
     return pdf_file
 
 # Streamlit App
-    st.markdown("""
+st.markdown("""
     <style>
     body {
         background-image: url('https://github.com/Ayo-tech-ai/MalariaPredict/raw/main/background1.jpeg');
         background-size: cover;  /* Fills the screen but may crop */
         background-position: center;
         background-attachment: fixed;
-        color: blue;
     }
     .stApp {
         background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent overlay */
@@ -69,7 +68,7 @@ def generate_pdf(result, symptoms, bp, temperature):
     h1 {
         color: blue;
         text-align: center;
-        font-size: 50px;
+        font-size: 60px;
     }
     .team-btn {
         position: absolute;
@@ -84,10 +83,15 @@ def generate_pdf(result, symptoms, bp, temperature):
         cursor: pointer;
         border-radius: 5px;
     }
+    .symptom-text {
+        color: blue;
+    }
+    .result-text {
+        color: red;
+        font-weight: bold;
+    }
     </style>
 """, unsafe_allow_html=True)
-
-
 
 # Add "Meet the Team" button
 if st.button("Meet the Team", key="team_button"):
@@ -165,32 +169,27 @@ if st.button("Predict"):
 
     # Model prediction
     result = predict_malaria(input_data)
-    
+
     # Display prediction
-    st.success(f"The prediction result is: {result}")
-    
+    st.markdown(f"<p class='result-text'>The prediction result is: {result}</p>", unsafe_allow_html=True)
+
     # Display additional medical information
     st.subheader("Additional Information:")
     if bp_valid:
-        st.write(f"Blood Pressure: {bp_valid}")
+        st.markdown(f"<p class='symptom-text'>Blood Pressure: {bp_valid}</p>", unsafe_allow_html=True)
     else:
-        st.write("Blood Pressure: Invalid or not provided.")
-    st.write(f"Temperature: {temperature:.1f}°C")
-    
-    # Debugging: Print symptom inputs to ensure they are correctly passed
-    st.write("Symptoms Input Values:")
-    for symptom_name, presence in symptoms.items():
-        st.write(f"{symptom_name}: {presence}")
-    
+        st.markdown("<p class='symptom-text'>Blood Pressure: Invalid or not provided.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p class='symptom-text'>Temperature: {temperature:.1f}°C</p>", unsafe_allow_html=True)
+
     # Generate PDF
     pdf_file = generate_pdf(result, symptoms, bp_valid, temperature)
-    
+
     # Provide Download Option
     with open(pdf_file, "rb") as pdf:
         b64_pdf = base64.b64encode(pdf.read()).decode('utf-8')
         href = f'<a href="data:application/octet-stream;base64,{b64_pdf}" download="{pdf_file}">Download Medical Report as PDF</a>'
         st.markdown(href, unsafe_allow_html=True)
-    
+
     # Provide Print Option
     href_print = f'<a href="{pdf_file}" target="_blank" onclick="window.print()">Print Medical Report</a>'
     st.markdown(href_print, unsafe_allow_html=True)
