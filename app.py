@@ -68,7 +68,7 @@ st.markdown("""
     h1 {
         color: blue;
         text-align: center;
-        font-size: 40px;
+        font-size: 60px;
     }
     .team-btn {
         position: absolute;
@@ -84,7 +84,7 @@ st.markdown("""
         border-radius: 5px;
     }
     .symptom-text {
-        color: black;
+        color: blue;
     }
     .result-text {
         color: red;
