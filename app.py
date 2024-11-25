@@ -60,11 +60,11 @@ st.markdown("""
         background-size: cover;  /* Fills the screen but may crop */
         background-position: center;
         background-attachment: fixed;
-        color: white;
     }
     .stApp {
         background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent overlay */
         padding: 10px;
+        color: red !important; /* Change text color to red */
     }
     h1 {
         color: blue;
