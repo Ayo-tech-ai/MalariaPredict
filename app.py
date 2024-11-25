@@ -63,7 +63,7 @@ st.markdown("""
         color: blue;
     }
     .stApp {
-        background-color: blue;  /* Changed to solid blue */
+        background-color: rgba(0, 0, 255, 0.5);  /* Semi-transparent blue */
         padding: 10px;
     }
     h1 {
@@ -86,6 +86,7 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+
 
 
 # Add "Meet the Team" button
